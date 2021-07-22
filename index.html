@@ -1,0 +1,199 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Demo - Record Photo From Webcam Using Javascript</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<style type="text/css">
+body{background:black;}
+ul {
+  list-style-type: none;
+  position:fixed;
+  bottom:0;
+  left:0;
+  padding: 0;
+  overflow: hidden;
+  background-color: black;
+  width:100%;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 1px 1px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+blink {
+  -webkit-animation: 2s linear infinite condemned_blink_effect; /* for Safari 4.0 - 8.0 */
+  animation: 2s linear infinite condemned_blink_effect;
+}
+
+/* for Safari 4.0 - 8.0 */
+@-webkit-keyframes condemned_blink_effect {
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+
+@keyframes condemned_blink_effect {
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+.hdd,.hdd2{border:2px solid white;}
+.A{color:black; background:red; padding:10px 10px 10px 10px; border-radius:3px;font-family:arial;text-align:center;}
+.B{color:black; background:White; padding:10px 10px 10px 10px; border-radius:3px;font-family:arial;text-align:center;}
+.va{color:black; background:skyblue; padding:10px 10px 10px 10px; border-radius:3px;font-family:arial;text-align:center;}
+.vaa{color:black; background:yellow; padding:10px 10px 10px 10px; border-radius:3px;font-family:arial;text-align:center;}
+#video {
+    display: none;
+    margin: 50px auto 0 auto;
+}
+
+#start-record, #stop-record, #download-video {
+    display: none;
+}
+
+#download-video {
+    text-align: center;
+    margin: 20px 0 0 0;
+}
+
+</style>
+</head>
+
+<body>
+
+<video id="video" width="640" height="480" autoplay></video>
+<ul>
+  <li>
+<a><div style="border: 2px solid white;"><blink><div style="color:transparent; width:20px; height:20px; background:red; border-radius:50px;">a</div>
+</blink>
+<h3 style="font-family:arial;color:red;"> REC </h3></a></div>
+</li>
+
+  <li><a><div class="hdd">
+<h3 class="A">A</h3>
+<h4> Hard-Disk </h4>
+</div></a></li>
+
+  <li><a><div class="hdd2">
+<h3 class="B">B</h3>
+<h4> Hard-Disk </h4>
+</div></a></li>
+
+  <li><a><div class="hdd2">
+<h3 class="va">12.3v 2A</h3>
+<h4> Power Input </h4>
+</div></a></li>
+<li>
+<a>
+<div class="hdd2">
+<label for="cars">Choose a Destination Disk:</label>
+<select id="cars">
+  <option value="volvo">Hard-Disk |A|</option>
+  <option value="saab">Hard-Disk |B|</option>
+</select>
+</div>
+</a>
+</li>
+  <li><a><div class="hdd2">
+<h3 class="vaa"><button id="start-camera">Start Camera</button></h3>
+<h4> RUN </h4>
+</div></a></li>
+<li>
+  <li><a><div class="hdd2">
+<h3 class="vaa"><button id="start-record">Start Recording</button></h3>
+<h4> Start Recording </h4>
+</div></a></li>
+<li>
+  <li><a><div class="hdd2">
+<h3 class="vaa"><button id="stop-record">Stop Recording</button></h3>
+<h4> Stop Recording </h4>
+</div></a></li>
+<li>
+  <li><a><div class="hdd2">
+<h3 class="vaa"><a id="download-video" download="test.webm" style="color:black;">Download Video</a></h3>
+<h4> save</h4>
+</div></a></li>
+<li>
+</ul>
+<script>
+
+let camera_button = document.querySelector("#start-camera");
+let video = document.querySelector("#video");
+let start_button = document.querySelector("#start-record");
+let stop_button = document.querySelector("#stop-record");
+let download_link = document.querySelector("#download-video");
+
+let camera_stream = null;
+let media_recorder = null;
+let blobs_recorded = [];
+
+camera_button.addEventListener('click', async function() {
+   	try {
+    	camera_stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    }
+    catch(error) {
+    	alert(error.message);
+    	return;
+    }
+
+    video.srcObject = camera_stream;
+    camera_button.style.display = 'none';
+    video.style.display = 'block';
+    start_button.style.display = 'block';
+});
+
+start_button.addEventListener('click', function() {
+    media_recorder = new MediaRecorder(camera_stream, { mimeType: 'video/webm' });
+
+    media_recorder.addEventListener('dataavailable', function(e) {
+    	blobs_recorded.push(e.data);
+    });
+
+    media_recorder.addEventListener('stop', function() {
+    	let video_local = URL.createObjectURL(new Blob(blobs_recorded, { type: 'video/webm' }));
+    	download_link.href = video_local;
+
+        stop_button.style.display = 'none';
+        download_link.style.display = 'block';
+    });
+
+    media_recorder.start(1000);
+
+    start_button.style.display = 'none';
+    stop_button.style.display = 'block';
+});
+
+stop_button.addEventListener('click', function() {
+	media_recorder.stop(); 
+});
+
+</script>
+
+</body>
+</html>
