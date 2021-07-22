@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Display Webcam Stream</title>
+<style>
+ul {
+  list-style-type: none;
+  position:fixed;
+  bottom:0;
+  left:0;
+  padding: 0;
+  overflow: hidden;
+  background-color: black;
+  width:100%;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 5px 5px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #111;
+}
+</style>
+<style>
+body{background:black; font-family:arial;cursor:url("cur.gif"),auto;}
+#container {
+	margin: 0px auto;
+	width: 500px;
+	height: 375px;
+    border:2px solid white;
+}
+#videoElement {
+	width: 500px;
+	height: 375px;
+	background-color: #111;
+}
+blink {
+  -webkit-animation: 2s linear infinite condemned_blink_effect; /* for Safari 4.0 - 8.0 */
+  animation: 2s linear infinite condemned_blink_effect;
+}
+
+/* for Safari 4.0 - 8.0 */
+@-webkit-keyframes condemned_blink_effect {
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+
+@keyframes condemned_blink_effect {
+  0% {
+    visibility: hidden;
+  }
+  50% {
+    visibility: hidden;
+  }
+  100% {
+    visibility: visible;
+  }
+}
+.hdd,.hdd2{border:2px solid white;}
+.A{color:black; background:red; padding:10px 10px 10px 10px; border-radius:3px;font-family:arial;text-align:center;}
+.B{color:black; background:White; padding:10px 10px 10px 10px; border-radius:3px;font-family:arial;text-align:center;}
+.va{color:black; background:skyblue; padding:10px 10px 10px 10px; border-radius:3px;font-family:arial;text-align:center;}
+</style>
+</head>
+ 
+<body>
+<div id="container">
+	<video autoplay="true" id="videoElement">
+	
+	</video>
+</div>
+<script>
+var video = document.querySelector("#videoElement");
+
+if (navigator.mediaDevices.getUserMedia) {
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(function (stream) {
+      video.srcObject = stream;
+    })
+    .catch(function (err0r) {
+      console.log("Something went wrong!");
+    });
+}
+</script>
+<ul>
+  <li>
+<a><div style="border: 2px solid white;"><blink><div style="color:transparent; width:20px; height:20px; background:red; border-radius:50px;">a</div>
+</blink>
+<h3 style="font-family:arial;color:red;"> REC </h3></a></div>
+</li>
+
+  <li><a><div class="hdd">
+<h3 class="A">A</h3>
+<h4> Hard-Disk </h4>
+</div></a></li>
+
+  <li><a><div class="hdd2">
+<h3 class="B">B</h3>
+<h4> Hard-Disk </h4>
+</div></a></li>
+
+  <li><a><div class="hdd2">
+<h3 class="va">12.3v 2A</h3>
+<h4> Power Input </h4>
+</div></a></li>
+<li>
+<a>
+<div class="hdd2">
+<label for="cars">Choose a Destination Disk:</label>
+<select id="cars">
+  <option value="volvo">Hard-Disk |A|</option>
+  <option value="saab">Hard-Disk |B|</option>
+</select>
+</div>
+</a>
+</li>
+</ul>
+</body>
+</html>
